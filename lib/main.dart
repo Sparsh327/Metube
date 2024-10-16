@@ -1,30 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:metube/core/secrets/app_secrets.dart';
-import 'package:metube/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:metube/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:metube/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
 import 'package:metube/features/auth/pesentation/pages/signup_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:metube/features/init_dependencies.dart';
 import 'core/fonts/util.dart';
 import 'core/theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final supabaseClient = await Supabase.initialize(
-      url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
+  await initDependencies();
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthBloc(
-            userSignUp: UserSignUp(
-              AuthRepositoryImpl(
-                AuthRemoteDataSourceImpl(supabaseClient.client),
-              ),
-            ),
-          ),
+          create: (context) => serviceLocator<AuthBloc>(),
         ),
       ],
       child: const MyApp(),
