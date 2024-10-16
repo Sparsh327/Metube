@@ -14,20 +14,22 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final supabaseClient = await Supabase.initialize(
       url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) => AuthBloc(
-          userSignUp: UserSignUp(
-            AuthRepositoryImpl(
-              AuthRemoteDataSourceImpl(supabaseClient.client),
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthBloc(
+            userSignUp: UserSignUp(
+              AuthRepositoryImpl(
+                AuthRemoteDataSourceImpl(supabaseClient.client),
+              ),
             ),
           ),
         ),
-      ),
-    ],
-    child: const MyApp(),
-  ));
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
