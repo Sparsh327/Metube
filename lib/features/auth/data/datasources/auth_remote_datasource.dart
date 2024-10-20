@@ -3,16 +3,21 @@ import 'package:metube/features/auth/data/models/app_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
+  Session? get currentUserSession;
   Future<AppUserModel> signUpWithEmailAndPassword(
       {required String email, required String password, required String name});
   Future<AppUserModel> loginWithEmailAndPassword(
       {required String email, required String password});
+  Future<AppUserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final SupabaseClient supabaseClient;
 
   AuthRemoteDataSourceImpl(this.supabaseClient);
+
+  @override
+  Session? get currentUserSession => supabaseClient.auth.currentSession;
 
   @override
   Future<AppUserModel> signUpWithEmailAndPassword(
@@ -42,6 +47,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       return AppUserModel.fromMap(response.user!.toJson());
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<AppUserModel?> getCurrentUserData() async {
+    try {
+      if (currentUserSession != null) {
+        final userData = await supabaseClient.from('profiles').select().eq(
+              'id',
+              currentUserSession!.user.id,
+            );
+        return AppUserModel.fromMap(userData.first).copyWith(
+          email: currentUserSession!.user.email,
+        );
+      }
+
+      return null;
     } catch (e) {
       throw ServerException(e.toString());
     }
