@@ -23,7 +23,7 @@ class _AuthFieldState extends State<AuthField> {
       controller: widget.controller,
       onChanged: (val) {},
       //controller: TextEditingController(text: store.companyName),
-      obscureText: obscureText,
+      obscureText: widget.showPassword ? obscureText : false,
       decoration: InputDecoration(
         suffixIcon: widget.showPassword
             ? IconButton(

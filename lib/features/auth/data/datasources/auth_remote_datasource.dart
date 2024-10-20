@@ -1,10 +1,11 @@
 import 'package:metube/core/error/exceptions.dart';
+import 'package:metube/features/auth/data/models/app_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<String> signUpWithEmailAndPassword(
-      {required String email, required String password});
-  Future<String> loginWithEmailAndPassword(
+  Future<AppUserModel> signUpWithEmailAndPassword(
+      {required String email, required String password, required String name});
+  Future<AppUserModel> loginWithEmailAndPassword(
       {required String email, required String password});
 }
 
@@ -14,24 +15,35 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this.supabaseClient);
 
   @override
-  Future<String> signUpWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<AppUserModel> signUpWithEmailAndPassword(
+      {required String name,
+      required String email,
+      required String password}) async {
     try {
-      final response =
-          await supabaseClient.auth.signUp(password: password, email: email);
+      final response = await supabaseClient.auth
+          .signUp(password: password, email: email, data: {"name": name});
       if (response.user == null) {
         throw const ServerException("User is null");
       }
-      return response.user!.id;
+      return AppUserModel.fromMap(response.user!.toJson());
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<String> loginWithEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement loginWithEmailAndPassword
-    throw UnimplementedError();
+  Future<AppUserModel> loginWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      final response = await supabaseClient.auth
+          .signInWithPassword(password: password, email: email);
+      if (response.user == null) {
+        throw const ServerException("User is null");
+      }
+
+      return AppUserModel.fromMap(response.user!.toJson());
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 }

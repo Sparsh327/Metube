@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:metube/core/common/widgets/loader.dart';
+import 'package:metube/core/utils/show_snackbar.dart';
 import 'package:metube/features/auth/pesentation/widgets/auth_field.dart';
+
+import '../bloc/auth_bloc.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -12,6 +17,7 @@ class _SignupPageState extends State<SignupPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -23,80 +29,104 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          children: [
-            const Padding(
-                padding: EdgeInsets.only(left: 10, top: 30),
-                child: Text(
-                  "Create your Account",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.w700,
-                  ),
-                )),
-            const SizedBox(
-              height: 25,
-            ),
-            AuthField(
-              controller: emailController,
-              hintText: "Email",
-              showPassword: false,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            AuthField(
-              controller: passwordController,
-              hintText: "Password",
-              showPassword: true,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            AuthField(
-              controller: emailController,
-              hintText: "Confirm Password",
-              showPassword: true,
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text(
-                "Sign Up",
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            RichText(
-              text: const TextSpan(
-                text: "Already have an account? ",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              showSnackBar(context: context, message: state.message);
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
+            return Form(
+              key: formKey,
+              child: Column(
                 children: [
-                  TextSpan(
-                    text: "Login",
-                    style: TextStyle(
-                      color: Colors.pink,
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w800,
+                  const Padding(
+                      padding: EdgeInsets.only(left: 10, top: 30),
+                      child: Text(
+                        "Create your Account",
+                        style: TextStyle(
+                          fontSize: 45,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  AuthField(
+                    controller: emailController,
+                    hintText: "Email",
+                    showPassword: false,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AuthField(
+                    controller: passwordController,
+                    hintText: "Password",
+                    showPassword: true,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AuthField(
+                    controller: confirmPasswordController,
+                    hintText: "Confirm Password",
+                    showPassword: true,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      authBloc.add(
+                        AuthSignUp(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          name: emailController.text.split("@")[0],
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Sign Up",
                     ),
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  RichText(
+                    text: const TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "Login",
+                          style: TextStyle(
+                            color: Colors.pink,
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
+            );
+          },
         ),
       ),
     );

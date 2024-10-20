@@ -10,9 +10,9 @@ final class AuthInitial extends AuthState {}
 final class AuthLoading extends AuthState {}
 
 final class AuthSuccess extends AuthState {
-  final String userId;
+  final AppUser userModel;
 
-  const AuthSuccess(this.userId);
+  const AuthSuccess(this.userModel);
 }
 
 final class AuthFailure extends AuthState {

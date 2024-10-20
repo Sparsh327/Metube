@@ -6,5 +6,6 @@ sealed class AuthEvent {}
 final class AuthSignUp extends AuthEvent {
   final String email;
   final String password;
-  AuthSignUp({required this.email, required this.password});
+  final String name;
+  AuthSignUp({required this.name, required this.email, required this.password});
 }
