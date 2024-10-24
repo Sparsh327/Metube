@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:metube/core/error/exceptions.dart';
 import 'package:metube/features/auth/data/models/app_user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,6 +34,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       return AppUserModel.fromMap(response.user!.toJson());
     } catch (e) {
+      log(e.toString());
       throw ServerException(e.toString());
     }
   }

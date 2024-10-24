@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:metube/app/splash.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
-import 'package:metube/features/auth/pesentation/pages/signup_page.dart';
 import 'package:metube/features/init_dependencies.dart';
 import 'core/fonts/util.dart';
 import 'core/theme/theme.dart';
@@ -30,10 +30,9 @@ class MyApp extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Poppins", "Poppins");
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: theme.dark(),
-      home: const SignupPage(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: theme.dark(),
+        home: const Splash());
   }
 }

@@ -2,29 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:metube/core/common/widgets/loader.dart';
 import 'package:metube/core/utils/show_snackbar.dart';
-import 'package:metube/features/auth/pesentation/pages/login_page.dart';
+import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
 import 'package:metube/features/auth/pesentation/widgets/auth_field.dart';
 
-import '../bloc/auth_bloc.dart';
-
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatefulWidget {
+  static route() => MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      );
+  const LoginPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose();
     super.dispose();
   }
 
@@ -36,28 +35,33 @@ class _SignupPageState extends State<SignupPage> {
         toolbarHeight: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.all(15.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
               showSnackBar(context: context, message: state.message);
             } else if (state is AuthSuccess) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()));
+              // Navigator.pushAndRemoveUntil(
+              //   context,
+              //   BlogPage.route(),
+              //   (route) => false,
+              // );
             }
           },
           builder: (context, state) {
             if (state is AuthLoading) {
               return const Loader();
             }
+
             return Form(
               key: formKey,
               child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(
                       padding: EdgeInsets.only(left: 10, top: 30),
                       child: Text(
-                        "Create your Account",
+                        "Login to your Account",
                         style: TextStyle(
                           fontSize: 45,
                           fontWeight: FontWeight.w700,
@@ -67,37 +71,24 @@ class _SignupPageState extends State<SignupPage> {
                     height: 25,
                   ),
                   AuthField(
-                    controller: nameController,
-                    hintText: "Name",
-                    showPassword: false,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  AuthField(
+                    hintText: 'Email',
                     controller: emailController,
-                    hintText: "Eamil",
                     showPassword: false,
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   AuthField(
+                    hintText: 'Password',
                     controller: passwordController,
-                    hintText: "Password",
                     showPassword: true,
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         authBloc.add(
-                          AuthSignUp(
+                          AuthLogin(
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
-                            name: nameController.text.trim(),
                           ),
                         );
                       }
@@ -106,35 +97,31 @@ class _SignupPageState extends State<SignupPage> {
                       "Sign Up",
                     ),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 20),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const LoginPage()));
-                    },
-                    child: RichText(
-                      text: const TextSpan(
-                        text: "Already have an account? ",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "Login",
-                            style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 16,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w800,
-                            ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: RichText(
+                        text: const TextSpan(
+                          text: "Don't have an account? ",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                          children: [
+                            TextSpan(
+                              text: "LogIn",
+                              style: TextStyle(
+                                color: Colors.pink,
+                                fontSize: 16,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
                 ],
               ),
             );

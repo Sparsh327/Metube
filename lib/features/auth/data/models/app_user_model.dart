@@ -5,9 +5,9 @@ class AppUserModel extends AppUser {
 
   factory AppUserModel.fromMap(Map<String, dynamic> map) {
     return AppUserModel(
-      email: map['email'] as String,
-      id: map['id'] as String,
-      name: map['name'] as String,
+      email: map['email'] as String? ?? '',
+      id: map['id'] as String? ?? '',
+      name: map['name'] as String? ?? '',
     );
   }
   AppUserModel copyWith({

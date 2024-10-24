@@ -38,7 +38,7 @@ void _initAuth() {
   serviceLocator.registerFactory<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       serviceLocator(),
-    ),
+    ), 
   );
 
   serviceLocator.registerFactory<AuthRepository>(
