@@ -4,10 +4,14 @@ import 'package:metube/core/common/widgets/loader.dart';
 import 'package:metube/core/utils/show_snackbar.dart';
 import 'package:metube/features/auth/pesentation/pages/login_page.dart';
 import 'package:metube/features/auth/pesentation/widgets/auth_field.dart';
+import 'package:metube/features/main/presentation/pages/main_page.dart';
 
 import '../bloc/auth_bloc.dart';
 
 class SignupPage extends StatefulWidget {
+  static route() => MaterialPageRoute(
+        builder: (context) => const SignupPage(),
+      );
   const SignupPage({super.key});
 
   @override
@@ -42,8 +46,11 @@ class _SignupPageState extends State<SignupPage> {
             if (state is AuthFailure) {
               showSnackBar(context: context, message: state.message);
             } else if (state is AuthSuccess) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()));
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MainPage()),
+                (route) => false,
+              );
             }
           },
           builder: (context, state) {

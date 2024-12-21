@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:metube/core/common/widgets/loader.dart';
 import 'package:metube/core/utils/show_snackbar.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
+import 'package:metube/features/auth/pesentation/pages/signup_page.dart';
 import 'package:metube/features/auth/pesentation/widgets/auth_field.dart';
+import 'package:metube/features/main/presentation/pages/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -41,11 +43,11 @@ class _LoginPageState extends State<LoginPage> {
             if (state is AuthFailure) {
               showSnackBar(context: context, message: state.message);
             } else if (state is AuthSuccess) {
-              // Navigator.pushAndRemoveUntil(
-              //   context,
-              //   BlogPage.route(),
-              //   (route) => false,
-              // );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MainPage()),
+                (route) => false,
+              );
             }
           },
           builder: (context, state) {
@@ -94,13 +96,13 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: const Text(
-                      "Sign Up",
+                      "Login",
                     ),
                   ),
                   const SizedBox(height: 20),
                   GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.push(context, SignupPage.route());
                       },
                       child: RichText(
                         text: const TextSpan(
@@ -111,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           children: [
                             TextSpan(
-                              text: "LogIn",
+                              text: "Sign Up",
                               style: TextStyle(
                                 color: Colors.pink,
                                 fontSize: 16,

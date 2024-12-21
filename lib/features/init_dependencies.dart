@@ -8,6 +8,7 @@ import 'package:metube/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:metube/features/auth/domain/repository/auth_repository.dart';
 import 'package:metube/features/auth/domain/usecases/current_user.dart';
 import 'package:metube/features/auth/domain/usecases/user_login.dart';
+import 'package:metube/features/auth/domain/usecases/user_logout.dart';
 import 'package:metube/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,7 +39,7 @@ void _initAuth() {
   serviceLocator.registerFactory<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       serviceLocator(),
-    ), 
+    ),
   );
 
   serviceLocator.registerFactory<AuthRepository>(
@@ -63,6 +64,11 @@ void _initAuth() {
       serviceLocator(),
     ),
   );
+  serviceLocator.registerFactory(
+    () => UserLogout(
+      serviceLocator(),
+    ),
+  );
 
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
@@ -70,6 +76,7 @@ void _initAuth() {
       userLogin: serviceLocator(),
       appUserCubit: serviceLocator(),
       currentUser: serviceLocator(),
+      userLogout: serviceLocator(),
     ),
   );
 }

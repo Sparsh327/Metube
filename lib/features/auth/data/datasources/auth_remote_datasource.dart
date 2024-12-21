@@ -11,6 +11,8 @@ abstract interface class AuthRemoteDataSource {
   Future<AppUserModel> loginWithEmailAndPassword(
       {required String email, required String password});
   Future<AppUserModel?> getCurrentUserData();
+
+  Future<void> userLogout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -32,7 +34,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.user == null) {
         throw const ServerException("User is null");
       }
-      return AppUserModel.fromMap(response.user!.toJson());
+      return AppUserModel.fromMap(response.user!.toJson()).copyWith(
+        email: response.user!.email,
+      );
     } catch (e) {
       log(e.toString());
       throw ServerException(e.toString());
@@ -49,7 +53,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw const ServerException("User is null");
       }
 
-      return AppUserModel.fromMap(response.user!.toJson());
+      return AppUserModel.fromMap(response.user!.toJson()).copyWith(
+        email: response.user!.email,
+      );
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -72,5 +78,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  @override
+  Future<void> userLogout() async {
+    await supabaseClient.auth.signOut();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:metube/app/splash.dart';
+import 'package:metube/core/app_user/app_user_cubit.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
 import 'package:metube/features/init_dependencies.dart';
 import 'core/fonts/util.dart';
@@ -13,7 +14,10 @@ Future<void> main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => serviceLocator<AuthBloc>(),
+          create: (_) => serviceLocator<AppUserCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
         ),
       ],
       child: const MyApp(),
@@ -21,8 +25,19 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(AuthIsUserLoggedIn());
+  }
 
   // This widget is the root of your application.
   @override

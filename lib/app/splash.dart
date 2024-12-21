@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:metube/features/auth/pesentation/pages/signup_page.dart';
+import 'package:metube/features/auth/pesentation/pages/navigation_page.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -20,7 +20,7 @@ class _SplashState extends State<Splash> {
     await Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => const SignupPage()),
+          MaterialPageRoute(builder: (_) => const NavigationPage()),
           (route) => false);
     });
   }
