@@ -50,7 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  void _onAuthSignUp(
+  Future<void> _onAuthSignUp(
     AuthSignUp event,
     Emitter<AuthState> emit,
   ) async {
@@ -62,26 +62,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
 
-    res.fold(
+    return res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (user) => _emitAuthSuccess(user, emit),
+      (_) async {
+        final currentUserRes = await _currentUser(NoParams());
+
+        if (!emit.isDone) {
+          currentUserRes.fold(
+            (l) => emit(AuthFailure(l.message)),
+            (user) {
+              if (!emit.isDone) {
+                _appUserCubit.updateUser(user);
+                emit(AuthSuccess(user));
+              }
+            },
+          );
+        }
+      },
     );
   }
 
-  void _onAuthLogin(
+  Future<void> _onAuthLogin(
     AuthLogin event,
     Emitter<AuthState> emit,
   ) async {
-    final res = await _userLogin(
+    final loginRes = await _userLogin(
       UserLoginParams(
         email: event.email,
         password: event.password,
       ),
     );
 
-    res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (user) => _emitAuthSuccess(user, emit),
+    return loginRes.fold(
+      (l) => emit(AuthFailure(l.message)),
+      (_) async {
+        // After successful login, fetch current user
+        final currentUserRes = await _currentUser(NoParams());
+
+        if (!emit.isDone) {
+          currentUserRes.fold(
+            (l) => emit(AuthFailure(l.message)),
+            (user) {
+              if (!emit.isDone) {
+                _appUserCubit.updateUser(user);
+                emit(AuthSuccess(user));
+              }
+            },
+          );
+        }
+      },
     );
   }
 

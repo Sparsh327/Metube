@@ -29,9 +29,16 @@ class _MainPageState extends State<MainPage> {
           children: [
             BlocBuilder<AppUserCubit, AppUserState>(builder: (context, state) {
               if (state is AppUserLoggedIn) {
-                return Text(state.user.name);
+                return Text(
+                  state.user.name,
+                  style: const TextStyle(color: Colors.yellow),
+                );
+              } else {
+                return const Text(
+                  "data",
+                  style: TextStyle(color: Colors.red),
+                );
               }
-              return const Text("data");
             }),
             Text(
               "Logged In",
