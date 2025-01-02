@@ -15,7 +15,7 @@ class NavigationPage extends StatelessWidget {
       },
       builder: (context, isLoggedIn) {
         if (isLoggedIn) {
-          return const MainPage();
+          return const BottomNavPage();
         }
         return const LoginPage();
       },

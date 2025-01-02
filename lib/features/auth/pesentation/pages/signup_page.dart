@@ -36,6 +36,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     final authBloc = context.read<AuthBloc>();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: 0,
       ),
@@ -48,7 +49,7 @@ class _SignupPageState extends State<SignupPage> {
             } else if (state is AuthSuccess) {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => const MainPage()),
+                MaterialPageRoute(builder: (_) => const BottomNavPage()),
                 (route) => false,
               );
             }
