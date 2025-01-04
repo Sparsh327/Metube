@@ -4,6 +4,7 @@ import 'package:metube/app/splash.dart';
 import 'package:metube/core/app_user/app_user_cubit.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
 import 'package:metube/features/init_dependencies.dart';
+import 'package:metube/features/post/presentation/bloc/post_bloc.dart';
 import 'core/fonts/util.dart';
 import 'core/theme/theme.dart';
 
@@ -18,6 +19,9 @@ Future<void> main() async {
         ),
         BlocProvider(
           create: (_) => serviceLocator<AuthBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<PostBloc>(),
         ),
       ],
       child: const MyApp(),

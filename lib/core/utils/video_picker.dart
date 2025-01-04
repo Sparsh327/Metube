@@ -1,5 +1,8 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:get_thumbnail_video/index.dart';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 
 class VideoPickerService {
   Future<(File?, String?)> pickVideo() async {
@@ -44,5 +47,22 @@ class VideoPickerService {
     }
   }
 
-  // Example usage in repository or bloc
+  Future<(File?, String?)> getVideoThumbnail(File videoFile) async {
+    try {
+      final uint8list = await VideoThumbnail.thumbnailData(
+        video: videoFile.path,
+        imageFormat: ImageFormat.JPEG,
+        maxWidth:
+            128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+        quality: 25,
+      );
+      final tempDir = await getTemporaryDirectory();
+      File file = await File('${tempDir.path}/image.png').create();
+      file.writeAsBytesSync(uint8list);
+      final thumbnail = File(file.path);
+      return (thumbnail, null);
+    } catch (e) {
+      return (null, 'Error getting video thumbnail: $e');
+    }
+  }
 }

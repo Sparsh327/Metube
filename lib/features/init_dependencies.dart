@@ -11,12 +11,19 @@ import 'package:metube/features/auth/domain/usecases/user_login.dart';
 import 'package:metube/features/auth/domain/usecases/user_logout.dart';
 import 'package:metube/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:metube/features/auth/pesentation/bloc/auth_bloc.dart';
+import 'package:metube/features/post/data/datasources/post_remote_data_source.dart';
+import 'package:metube/features/post/domain/repository/post_repository.dart';
+import 'package:metube/features/post/presentation/bloc/post_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'post/data/repositories/post_repository_impl.dart';
+import 'post/domain/usecases/upload_post.dart';
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   _initAuth();
+  _initPost();
   final supabaseClient = await Supabase.initialize(
       url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
 
@@ -36,39 +43,37 @@ Future<void> initDependencies() async {
 }
 
 void _initAuth() {
-  serviceLocator.registerFactory<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(
-        connectionChecker: serviceLocator(),
-        authRemoteDataSource: serviceLocator()),
-  );
-
-  serviceLocator.registerFactory(
-    () => UserSignUp(
-      serviceLocator(),
-    ),
-  );
-
-  serviceLocator.registerFactory(
-    () => UserLogin(
-      serviceLocator(),
-    ),
-  );
-  serviceLocator.registerFactory(
-    () => CurrentUser(
-      serviceLocator(),
-    ),
-  );
-  serviceLocator.registerFactory(
-    () => UserLogout(
-      serviceLocator(),
-    ),
-  );
+  serviceLocator
+    ..registerFactory<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory<AuthRepository>(
+      () => AuthRepositoryImpl(
+          connectionChecker: serviceLocator(),
+          authRemoteDataSource: serviceLocator()),
+    )
+    ..registerFactory(
+      () => UserSignUp(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserLogin(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => CurrentUser(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserLogout(
+        serviceLocator(),
+      ),
+    );
 
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
@@ -79,4 +84,28 @@ void _initAuth() {
       userLogout: serviceLocator(),
     ),
   );
+}
+
+void _initPost() {
+  serviceLocator
+    ..registerFactory<PostRemoteDataSource>(
+      () => PostRemoteDataSourceImpl(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory<PostRepository>(
+      () => PostRepositoryImpl(
+        postRemoteDataSource: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UploadPost(
+        postRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => PostBloc(
+        serviceLocator(),
+      ),
+    );
 }

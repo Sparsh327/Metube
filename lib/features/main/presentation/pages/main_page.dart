@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metube/features/post/presentation/pages/manage_post_page.dart';
 
 import '../../../home/home_page.dart';
-import '../../../post/presentation/add_post.dart';
 import '../../../profile/profile_page.dart';
 
 class BottomNavPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = const [
     HomePage(),
-    AddPost(),
+    ManagePostPage(),
     ProfilePage()
   ];
   @override
@@ -32,24 +32,16 @@ class _BottomNavPageState extends State<BottomNavPage> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.video_collection),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(2),
-                  child: Icon(Icons.add),
-                )),
+            icon: Icon(Icons.video_call),
             label: "Post",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.emoji_people_rounded),
             label: "Profile",
           ),
