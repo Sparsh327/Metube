@@ -12,8 +12,8 @@ class ManagePostPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => const AddPost()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const AddPostPage()));
             },
             icon: const Icon(Icons.video_call),
           ),

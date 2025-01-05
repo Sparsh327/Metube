@@ -21,7 +21,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         thumbnailFile: event.thumbNailFile,
         title: event.title,
         description: event.description,
-        username: event.username,
+     
         userId: event.userId,
       ),
     );

@@ -17,7 +17,6 @@ class UploadPost implements UseCase<Post, UploadPostParams> {
       thumbNailFile: params.thumbnailFile,
       title: params.title,
       description: params.description,
-      username: params.username,
       userId: params.userId,
     );
   }
@@ -26,14 +25,13 @@ class UploadPost implements UseCase<Post, UploadPostParams> {
 class UploadPostParams {
   final String title;
   final String description;
-  final String username;
+
   final String userId;
   final File videoFile;
   final File thumbnailFile;
   UploadPostParams(
       {required this.title,
       required this.description,
-      required this.username,
       required this.userId,
       required this.videoFile,
       required this.thumbnailFile});

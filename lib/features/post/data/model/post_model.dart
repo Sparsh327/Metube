@@ -8,7 +8,6 @@ class PostModel extends Post {
       required super.videoUrl,
       required super.thumbnailUrl,
       required super.userId,
-      required super.username,
       required super.createdAt,
       required super.updatedAt});
 
@@ -20,7 +19,6 @@ class PostModel extends Post {
       videoUrl: map['video_url'],
       thumbnailUrl: map['thumbnail_url'],
       userId: map['user_id'],
-      username: map['username'],
       createdAt: map['created_at'] == null
           ? DateTime.now()
           : DateTime.parse(map['created_at']),
@@ -48,7 +46,6 @@ class PostModel extends Post {
       videoUrl: videoUrl ?? this.videoUrl,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       userId: userId ?? this.userId,
-      username: username ?? this.username,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -62,7 +59,6 @@ class PostModel extends Post {
       'video_url': videoUrl,
       'thumbnail_url': thumbnailUrl,
       'user_id': userId,
-      'username': username,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

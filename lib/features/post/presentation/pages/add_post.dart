@@ -2,10 +2,15 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:metube/core/app_user/app_user_cubit.dart';
 import 'package:metube/core/utils/video_picker.dart';
+import 'package:metube/features/post/presentation/bloc/post_bloc.dart';
 
-class AddPost extends StatelessWidget {
-  const AddPost({super.key});
+import '../../../../core/utils/show_snackbar.dart';
+
+class AddPostPage extends StatelessWidget {
+  const AddPostPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,24 +21,45 @@ class AddPost extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics()),
-          child: Column(
-            children: [
-              Row(
+          child: BlocConsumer<PostBloc, PostState>(
+            listener: (context, state) {
+              if (state is PostFailure) {
+                log(state.error);
+                showSnackBar(context: context, message: state.error);
+              }
+              if (state is PostSuccess) {
+                Navigator.pop(context);
+              }
+            },
+            builder: (context, state) {
+              if (state is PostLoading) {
+                return const Column(
+                  children: [
+                    Center(child: CircularProgressIndicator()),
+                  ],
+                );
+              }
+              return Column(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const Text(
+                        "Add Post",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    "Add Post",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                  const AddVideoPost()
                 ],
-              ),
-              const AddVideoPost()
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -50,6 +76,7 @@ class AddVideoPost extends StatefulWidget {
 
 class _AddVideoPostState extends State<AddVideoPost> {
   File? thumbNailImage;
+  File? videoFile;
   bool isLoading = false;
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
@@ -68,6 +95,7 @@ class _AddVideoPostState extends State<AddVideoPost> {
       return;
     }
     if (videoFile != null) {
+      this.videoFile = videoFile;
       final (thumbNail, error) =
           await VideoPickerService().getVideoThumbnail(videoFile);
 
@@ -98,6 +126,7 @@ class _AddVideoPostState extends State<AddVideoPost> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final postBloc = BlocProvider.of<PostBloc>(context);
     return Form(
       key: formKey,
       child: Column(
@@ -126,10 +155,11 @@ class _AddVideoPostState extends State<AddVideoPost> {
                   )
                 else
                   Center(
-                      child: TextButton(
-                    onPressed: handleVideoSelection,
-                    child: const Text("Select Video"),
-                  ))
+                    child: TextButton(
+                      onPressed: handleVideoSelection,
+                      child: const Text("Select Video"),
+                    ),
+                  )
               ],
             ]),
           ),
@@ -163,8 +193,25 @@ class _AddVideoPostState extends State<AddVideoPost> {
           const SizedBox(height: 20),
           FloatingActionButton.extended(
               onPressed: () {
+                final user =
+                    (context.read<AppUserCubit>().state as AppUserLoggedIn)
+                        .user;
                 if (formKey.currentState!.validate()) {
-                  log("message");
+                  if (thumbNailImage != null && videoFile != null) {
+                    postBloc.add(AddPost(
+                      videoFile: videoFile!,
+                      thumbNailFile: thumbNailImage!,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      userId: user.id,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please select video"),
+                      ),
+                    );
+                  }
                 }
               },
               label: const Row(

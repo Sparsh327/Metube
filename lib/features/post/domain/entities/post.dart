@@ -5,7 +5,7 @@ class Post {
   final String videoUrl;
   final String thumbnailUrl;
   final String userId;
-  final String username;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -16,7 +16,6 @@ class Post {
     required this.videoUrl,
     required this.thumbnailUrl,
     required this.userId,
-    required this.username,
     required this.createdAt,
     required this.updatedAt,
   });

@@ -11,7 +11,7 @@ import 'package:metube/features/post/domain/repository/post_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class PostRepositoryImpl implements PostRepository {
-  final PostRemoteDataSourceImpl postRemoteDataSource;
+  final PostRemoteDataSource postRemoteDataSource;
 
   PostRepositoryImpl({required this.postRemoteDataSource});
 
@@ -21,13 +21,11 @@ class PostRepositoryImpl implements PostRepository {
       required File thumbNailFile,
       required String title,
       required String description,
-      required String username,
       required String userId}) async {
     try {
       PostModel post = PostModel(
           title: title,
           description: description,
-          username: username,
           userId: userId,
           id: const Uuid().v4(),
           videoUrl: "",

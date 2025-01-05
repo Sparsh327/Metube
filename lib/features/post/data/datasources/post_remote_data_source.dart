@@ -15,12 +15,12 @@ abstract interface class PostRemoteDataSource {
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final SupabaseClient supabaseClient;
   PostRemoteDataSourceImpl(this.supabaseClient);
+
   @override
   Future<PostModel> uploadPost(PostModel post) async {
     try {
       final data =
           await supabaseClient.from('posts').insert(post.toJson()).select();
-
       return PostModel.fromJson(data.first);
     } catch (e) {
       throw ServerException(e.toString());
@@ -34,20 +34,30 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     required File thumbNailFile,
   }) async {
     try {
-      await supabaseClient.storage
-          .from('videos')
-          .upload(postId, videoFile);
+      // Get current user ID
+      final userId = supabaseClient.auth.currentUser?.id;
+      if (userId == null) throw const ServerException('User not authenticated');
+
+      // Create paths with user ID
+      final videoPath =
+          '$userId/$postId-video${_getFileExtension(videoFile.path)}';
+      final thumbnailPath =
+          '$userId/$postId-thumbnail${_getFileExtension(thumbNailFile.path)}';
+
+      // Upload files
+      await supabaseClient.storage.from('videos').upload(videoPath, videoFile);
+
       await supabaseClient.storage
           .from('thumbnails')
-          .upload(postId, thumbNailFile);
+          .upload(thumbnailPath, thumbNailFile);
 
-      final videoUrl = supabaseClient.storage.from('videos').getPublicUrl(
-            postId,
-          );
+      // Get public URLs
+      final videoUrl =
+          supabaseClient.storage.from('videos').getPublicUrl(videoPath);
+
       final thumbnailUrl =
-          supabaseClient.storage.from('thumbnails').getPublicUrl(
-                postId,
-              );
+          supabaseClient.storage.from('thumbnails').getPublicUrl(thumbnailPath);
+
       return {
         'videoUrl': videoUrl,
         'thumbnailUrl': thumbnailUrl,
@@ -55,5 +65,10 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  // Helper function to get file extension
+  String _getFileExtension(String filePath) {
+    return filePath.substring(filePath.lastIndexOf('.'));
   }
 }

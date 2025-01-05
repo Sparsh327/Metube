@@ -10,7 +10,6 @@ abstract interface class PostRepository {
     required File thumbNailFile,
     required String title,
     required String description,
-    required String username,
     required String userId,
   });
 }
