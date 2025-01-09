@@ -48,4 +48,14 @@ class PostRepositoryImpl implements PostRepository {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Post>>> getPostsByUserId(String userId) async {
+    try {
+      final data = await postRemoteDataSource.getPostsByUserId(userId);
+      return right(data);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

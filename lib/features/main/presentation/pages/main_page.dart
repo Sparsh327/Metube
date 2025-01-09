@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:metube/features/post/presentation/pages/manage_post_page.dart';
 
+import '../../../../core/app_user/app_user_cubit.dart';
 import '../../../home/home_page.dart';
+import '../../../post/presentation/bloc/post_bloc.dart';
 import '../../../profile/profile_page.dart';
 
 class BottomNavPage extends StatefulWidget {
@@ -18,6 +21,15 @@ class _BottomNavPageState extends State<BottomNavPage> {
     ManagePostPage(),
     ProfilePage()
   ];
+  late final user =
+      (context.read<AppUserCubit>().state as AppUserLoggedIn).user;
+  late final postBloc = BlocProvider.of<PostBloc>(context);
+  @override
+  void initState() {
+    postBloc.add(FetchUserPosts(userId: user.id));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

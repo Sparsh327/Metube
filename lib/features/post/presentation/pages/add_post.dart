@@ -173,6 +173,9 @@ class _AddVideoPostState extends State<AddVideoPost> {
               if (value!.isEmpty) {
                 return 'Please enter a title';
               }
+              if (value.length < 4) {
+                return 'Title must be at least 4 characters';
+              }
               return null;
             },
           ),
@@ -187,6 +190,9 @@ class _AddVideoPostState extends State<AddVideoPost> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter a description';
+                }
+                if (value.length < 11) {
+                  return 'Description must be at least 10 characters';
                 }
                 return null;
               }),

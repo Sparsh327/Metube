@@ -10,6 +10,8 @@ abstract interface class PostRemoteDataSource {
       {required String postId,
       required File videoFile,
       required File thumbNailFile});
+
+  Future<List<PostModel>> getPostsByUserId(String userId);
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -62,6 +64,20 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         'videoUrl': videoUrl,
         'thumbnailUrl': thumbnailUrl,
       };
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<PostModel>> getPostsByUserId(String userId) async {
+    try {
+      final data = await supabaseClient
+          .from('posts')
+          .select()
+          .eq('user_id', userId)
+          .order('created_at', ascending: false);
+      return data.map((post) => PostModel.fromJson(post)).toList();
     } catch (e) {
       throw ServerException(e.toString());
     }

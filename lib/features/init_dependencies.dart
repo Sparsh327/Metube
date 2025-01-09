@@ -17,6 +17,7 @@ import 'package:metube/features/post/presentation/bloc/post_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'post/data/repositories/post_repository_impl.dart';
+import 'post/domain/usecases/get_user_posts.dart';
 import 'post/domain/usecases/upload_post.dart';
 
 final serviceLocator = GetIt.instance;
@@ -103,8 +104,14 @@ void _initPost() {
         postRepository: serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => GetUserPosts(
+        postRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => PostBloc(
+        serviceLocator(),
         serviceLocator(),
       ),
     );

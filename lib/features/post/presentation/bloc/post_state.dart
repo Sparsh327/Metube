@@ -13,3 +13,8 @@ final class PostFailure extends PostState {
   final String error;
   PostFailure(this.error);
 }
+
+final class PostDisplaySuccess extends PostState {
+  final List<Post> posts;
+  PostDisplaySuccess(this.posts);
+}

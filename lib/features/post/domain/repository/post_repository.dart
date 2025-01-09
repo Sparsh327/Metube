@@ -12,4 +12,6 @@ abstract interface class PostRepository {
     required String description,
     required String userId,
   });
+
+  Future<Either<Failure, List<Post>>> getPostsByUserId(String userId);
 }
