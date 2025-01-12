@@ -42,4 +42,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     result.fold((failure) => emit(PostFailure(failure.message)),
         (posts) => emit(PostDisplaySuccess(posts)));
   }
+
+  // void _updatePostList(Emitter<PostState> emit, Post post) {
+  //   final currentState = state;
+  //   if (currentState is PostDisplaySuccess) {
+  //     final currentPosts = currentState.posts;
+  //     emit(PostDisplaySuccess([...currentPosts, post]));
+  //   }
+  // }
 }

@@ -20,7 +20,7 @@ class ImageUrlWidget extends StatelessWidget {
       child: CachedNetworkImage(
           height: height,
           width: width,
-          fit: BoxFit.fill,
+          fit: BoxFit.cover, 
           placeholder: (context, url) => const Shimmer(
                 gradient: LinearGradient(
                   colors: [

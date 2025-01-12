@@ -4,6 +4,7 @@ import 'package:metube/core/common/widgets/image_display_widget.dart';
 import 'package:metube/features/post/domain/entities/post.dart';
 import 'package:metube/features/post/presentation/bloc/post_bloc.dart';
 import 'package:metube/features/post/presentation/pages/add_post.dart';
+import 'package:metube/features/post/presentation/widgets/video_list_widget.dart';
 
 class ManagePostPage extends StatelessWidget {
   const ManagePostPage({super.key});
@@ -46,19 +47,7 @@ class MyPostList extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is PostDisplaySuccess) {
-          return Expanded(
-            child: ListView.separated(
-              itemCount: state.posts.length,
-              itemBuilder: (context, index) {
-                return PostThumbnailWidget(post: state.posts[index]);
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
-            ),
-          );
+          return VideoInList(post: state.posts);
         }
         if (state is PostFailure) {
           return Center(child: Text(state.error));
@@ -82,24 +71,24 @@ class PostThumbnailWidget extends StatelessWidget {
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ImageUrlWidget(
-              borderRadius: 0,
-              height: 100,
-              imgUrl: post.thumbnailUrl,
-              width: size.width),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(post.title,
-              style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageUrlWidget(
+                borderRadius: 5,
+                height: 140,
+                imgUrl: post.thumbnailUrl,
+                width: size.width),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(post.title,
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          ],
+        ),
       ),
     );
   }

@@ -14,6 +14,7 @@ class AddPostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final postBloc = BlocProvider.of<PostBloc>(context);
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -28,6 +29,11 @@ class AddPostPage extends StatelessWidget {
                 showSnackBar(context: context, message: state.error);
               }
               if (state is PostSuccess) {
+                postBloc.add(FetchUserPosts(
+                    userId:
+                        (context.read<AppUserCubit>().state as AppUserLoggedIn)
+                            .user
+                            .id));
                 Navigator.pop(context);
               }
             },

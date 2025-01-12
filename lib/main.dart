@@ -10,6 +10,7 @@ import 'core/theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initDependencies();
   runApp(
     MultiBlocProvider(
@@ -48,6 +49,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     TextTheme textTheme = createTextTheme(context, "Poppins", "Poppins");
     MaterialTheme theme = MaterialTheme(textTheme);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    // ]);
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
