@@ -50,6 +50,7 @@ dependencies:
   get_thumbnail_video: ^0.7.3
   visibility_detector: ^0.4.0+2
   pip_view: ^0.9.7
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - .env
     - assets/png/
     - assets/png/
     - assets/lottie/

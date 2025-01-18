@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:metube/core/common/widgets/image_display_widget.dart';
 import 'package:metube/features/post/domain/entities/post.dart';
 import 'package:metube/features/post/presentation/widgets/video_screen.dart';
 import 'package:video_player/video_player.dart';
@@ -18,7 +19,7 @@ class VideoInList extends StatelessWidget {
     final userId =
         (context.read<AppUserCubit>().state as AppUserLoggedIn).user.id;
     return Expanded(
-      child: RefreshIndicator(  
+      child: RefreshIndicator(
         onRefresh: () async {
           postBloc.add(FetchUserPosts(userId: userId));
         },
@@ -27,6 +28,7 @@ class VideoInList extends StatelessWidget {
               parent: AlwaysScrollableScrollPhysics()),
           itemCount: post.length,
           itemBuilder: (context, index) {
+            final postModel = post[index];
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
@@ -38,22 +40,58 @@ class VideoInList extends StatelessWidget {
                   ),
                 );
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Card(
-                  child: Column(
-                    children: [
-                      VideoCard(
-                        videoUrl: post[index].videoUrl,
-                        thumbnailUrl: post[index].thumbnailUrl,
-                        key: ValueKey(index),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(post[index].title),
-                      ),
-                    ],
-                  ),
+              child: Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    VideoCard(
+                      videoUrl: postModel.videoUrl,
+                      thumbnailUrl: postModel.thumbnailUrl,
+                      key: ValueKey(index),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                Theme.of(context).appBarTheme.backgroundColor,
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.person, color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(postModel.title),
+                              Text(
+                                postModel.description,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        PopupMenuButton(itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: const Text('Delete'),
+                              onTap: () {},
+                            ),
+                          ];
+                        })
+                      ],
+                    ),
+                    const Divider()
+                  ],
                 ),
               ),
             );
@@ -162,13 +200,11 @@ class VideoCardState extends State<VideoCard>
               children: [
                 if (_isInitialized) VideoPlayer(_controller),
                 if (_showThumbnail)
-                  Image.network(
-                    widget.thumbnailUrl,
+                  ImageUrlWidget(
+                    borderRadius: 0,
+                    height: null,
+                    imgUrl: widget.thumbnailUrl,
                     width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(child: Icon(Icons.error));
-                    },
                   ),
                 Positioned(
                   bottom: 0,

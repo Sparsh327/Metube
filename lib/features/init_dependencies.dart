@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:metube/core/app_user/app_user_cubit.dart';
@@ -23,10 +24,11 @@ import 'post/domain/usecases/upload_post.dart';
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
+  await dotenv.load(fileName: ".env");
   _initAuth();
   _initPost();
   final supabaseClient = await Supabase.initialize(
-      url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
+      url: AppSecrets().supabaseUrl, anonKey: AppSecrets().anonKey);
 
   serviceLocator.registerLazySingleton(() => supabaseClient.client);
 

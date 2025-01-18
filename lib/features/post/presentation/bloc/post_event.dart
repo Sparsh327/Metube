@@ -20,6 +20,8 @@ final class AddPost extends PostEvent {
   });
 }
 
+
+
 final class FetchUserPosts extends PostEvent {
   final String userId;
 

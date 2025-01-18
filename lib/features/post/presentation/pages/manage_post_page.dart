@@ -25,7 +25,7 @@ class ManagePostPage extends StatelessWidget {
         ],
       ),
       body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Column(
           children: [
             MyPostList(),

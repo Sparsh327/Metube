@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
     TextTheme textTheme = createTextTheme(context, "Poppins", "Poppins");
     MaterialTheme theme = MaterialTheme(textTheme);
     // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitUp, 
     // ]);
 
     return MaterialApp(
