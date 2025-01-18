@@ -2,6 +2,8 @@
 
 A feature-rich video player application built with Flutter demonstrating clean architecture principles, Supabase backend integration, and modern state management using BLoC pattern.
 
+![screenshot](assets/png/clean.png)
+
 ## 📱 Features
 
 - Video playback with essential controls

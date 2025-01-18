@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:metube/features/post/presentation/pages/manage_post_page.dart';
 
 import '../../../../core/app_user/app_user_cubit.dart';
-import '../../../home/home_page.dart';
+
 import '../../../post/presentation/bloc/post_bloc.dart';
 import '../../../profile/profile_page.dart';
 
@@ -16,11 +16,7 @@ class BottomNavPage extends StatefulWidget {
 
 class _BottomNavPageState extends State<BottomNavPage> {
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = const [
-    HomePage(),
-    ManagePostPage(),
-    ProfilePage()
-  ];
+  final List<Widget> _widgetOptions = const [ManagePostPage(), ProfilePage()];
   late final user =
       (context.read<AppUserCubit>().state as AppUserLoggedIn).user;
   late final postBloc = BlocProvider.of<PostBloc>(context);
@@ -46,15 +42,11 @@ class _BottomNavPageState extends State<BottomNavPage> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.video_collection),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.video_call),
             label: "Post",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_people_rounded),
+            icon: Icon(Icons.person),
             label: "Profile",
           ),
         ],
@@ -62,7 +54,6 @@ class _BottomNavPageState extends State<BottomNavPage> {
     );
   }
 }
-
 
 // class MainPage extends StatefulWidget {
 //   const MainPage({super.key});
